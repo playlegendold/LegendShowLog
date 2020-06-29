@@ -6,3 +6,7 @@ api-version: 1.15
 author: Legend Dev-Team
 authors:
   - Tobi14601
+
+commands:
+  showlog:
+    permission: legend.command.showlog

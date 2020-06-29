@@ -14,7 +14,7 @@ val branchVersion = when (branch?.toLowerCase()) {
 }
 
 dependencies {
-    compileOnly("net.playlegend:bewear-api:1.15.2-$branchVersion")
+    compileOnly("net.playlegend:bewear-server:1.15.2-$branchVersion")
 }
 
 val tokens = mapOf("VERSION" to project.version)
