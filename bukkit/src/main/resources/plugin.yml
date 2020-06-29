@@ -1,0 +1,8 @@
+name: LegendShowLog
+version: @VERSION@
+description: Access latest log with a command
+main: net.playlegend.legendshowlog.bukkit.LegendShowLog
+api-version: 1.15
+author: Legend Dev-Team
+authors:
+  - Tobi14601
