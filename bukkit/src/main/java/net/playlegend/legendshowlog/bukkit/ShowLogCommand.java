@@ -18,17 +18,20 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
+  private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
   @Override
   public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
                            final @NotNull String label, final @NotNull String[] args) {
 
-    new Thread(() -> {
+    EXECUTOR_SERVICE.submit(() -> {
       File logFile = new File(LegendShowLog.LOG_PATH);
       if (!logFile.exists()) {
         sender.sendMessage("Logfile not found (" + LegendShowLog.LOG_PATH + ")");
@@ -43,7 +46,7 @@ public class ShowLogCommand implements CommandExecutor {
       try {
         byte[] data;
         if (args.length == 0) {
-          if (logFile.length() > this.MAX_FILE_LENGTH) {
+          if (logFile.length() > MAX_FILE_LENGTH) {
             sender.sendMessage("Log file is too big use /showlog <lines>");
             return;
           }
@@ -60,10 +63,8 @@ public class ShowLogCommand implements CommandExecutor {
         sender.sendMessage("Usage: /showlog <lines>");
       } catch (Exception ex) {
         sender.sendMessage("An error occurred while reading the log file (" + ex.getMessage() + ")");
-        ex.printStackTrace();
       }
-
-    }).start();
+    });
 
     return true;
   }
