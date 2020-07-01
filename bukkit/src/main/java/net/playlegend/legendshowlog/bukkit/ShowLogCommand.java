@@ -63,7 +63,6 @@ public class ShowLogCommand implements CommandExecutor {
         sender.sendMessage("Usage: /showlog <lines>");
       } catch (Exception ex) {
         sender.sendMessage("An error occurred while reading the log file (" + ex.getMessage() + ")");
-        ex.printStackTrace();
       }
     });
 
