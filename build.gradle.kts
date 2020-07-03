@@ -31,7 +31,7 @@ subprojects {
     apply(plugin = "com.gorylenko.gradle-git-properties")
 
     checkstyle {
-        toolVersion = "8.32"
+        toolVersion = "8.34"
         config = project.resources.text.fromUri("https://static.playlegend.net/checkstyle.xml")
     }
 

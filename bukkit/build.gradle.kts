@@ -8,13 +8,13 @@ version = if (System.getenv("CI") != null) {
 }.replace("/", "-")
 
 val branchVersion = when (branch?.toLowerCase()) {
-    "master" -> "master"
-    "staging" -> "staging"
+    "prod" -> "prod"
+    "stage" -> "stage"
     else -> "dev"
 }
 
 dependencies {
-    compileOnly("net.playlegend:bewear-server:1.15.2-$branchVersion")
+    compileOnly("net.playlegend:bewear-server:$branchVersion:all")
 }
 
 val tokens = mapOf("VERSION" to project.version)
