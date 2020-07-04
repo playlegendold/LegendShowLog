@@ -3,6 +3,7 @@ package net.playlegend.legendshowlog.bukkit;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.input.ReversedLinesFileReader;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,12 +35,12 @@ public class ShowLogCommand implements CommandExecutor {
     EXECUTOR_SERVICE.submit(() -> {
       File logFile = new File(LegendShowLog.LOG_PATH);
       if (!logFile.exists()) {
-        sender.sendMessage("Logfile not found (" + LegendShowLog.LOG_PATH + ")");
+        sender.sendMessage(ChatColor.RED + "Logfile not found (" + LegendShowLog.LOG_PATH + ")");
         return;
       }
 
       if (!logFile.isFile()) {
-        sender.sendMessage("Logfile is not a file");
+        sender.sendMessage(ChatColor.RED + "Logfile is not a file");
         return;
       }
 
@@ -47,22 +48,23 @@ public class ShowLogCommand implements CommandExecutor {
         byte[] data;
         if (args.length == 0) {
           if (logFile.length() > MAX_FILE_LENGTH) {
-            sender.sendMessage("Log file is too big use /showlog <lines>");
+            sender.sendMessage(ChatColor.GRAY + "Log file is too big use " + ChatColor.GOLD + "/showlog <lines>");
             return;
           }
           data = Files.readAllBytes(logFile.toPath());
         } else if (args.length == 1) {
           data = this.readBottomLines(logFile, Integer.parseInt(args[0]));
         } else {
-          sender.sendMessage("Usage: /showlog <lines>");
+          sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
           return;
         }
 
-        sender.sendMessage("Log: " + LegendShowLog.PASTE_DOMAIN + this.postToHastebin(data));
+        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + LegendShowLog.PASTE_DOMAIN
+                + this.postToHastebin(data));
       } catch (NumberFormatException ex) {
-        sender.sendMessage("Usage: /showlog <lines>");
+        sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
       } catch (Exception ex) {
-        sender.sendMessage("An error occurred while reading the log file (" + ex.getMessage() + ")");
+        sender.sendMessage(ChatColor.RED + "An error occurred while reading the log file (" + ex.getMessage() + ")");
       }
     });
 
