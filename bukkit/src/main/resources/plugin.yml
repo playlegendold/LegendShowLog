@@ -2,10 +2,11 @@ name: LegendShowLog
 version: @VERSION@
 description: Access latest log with a command
 main: net.playlegend.legendshowlog.bukkit.LegendShowLog
-api-version: 1.15
+api-version: 1.16
 author: Legend Dev-Team
 authors:
   - Tobi14601
+  - lusu007
 
 commands:
   showlog:

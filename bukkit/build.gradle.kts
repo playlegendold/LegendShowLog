@@ -14,7 +14,9 @@ val branchVersion = when (branch?.toLowerCase()) {
 }
 
 dependencies {
-    compileOnly("net.playlegend:bewear-server:$branchVersion:all")
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
+    compileOnly("commons-io:commons-io:2.5")
+    compileOnly("org.jetbrains:annotations:19.0.0")
 }
 
 val tokens = mapOf("VERSION" to project.version)
@@ -48,7 +50,7 @@ publishing {
                 username = System.getenv("repositoryUser")
                 password = System.getenv("repositoryPassword")
             }
-            url = uri("https://repository.playlegend.net/artifactory/legend/")
+            url = uri("https://repository.playlegend.net/artifactory/opensource/")
         }
     }
 }
