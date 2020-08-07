@@ -27,51 +27,57 @@ public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
   private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+  private final LegendShowLog showLog;
+
+  public ShowLogCommand(final LegendShowLog showLog) {
+    this.showLog = showLog;
+  }
 
   @Override
   public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
                            final @NotNull String label, final @NotNull String[] args) {
 
     if (sender.hasPermission("showlog.paste")) {
-      EXECUTOR_SERVICE.submit(() -> {
-        File logFile = new File(LegendShowLog.logPath);
-        if (!logFile.exists()) {
-          sender.sendMessage(ChatColor.RED + "Logfile not found (" + LegendShowLog.logPath + ")");
-          return;
-        }
+      return false;
+    }
 
-        if (!logFile.isFile()) {
-          sender.sendMessage(ChatColor.RED + "Logfile is not a file");
-          return;
-        }
+    EXECUTOR_SERVICE.submit(() -> {
+      File logFile = new File(showLog.getLogPath());
+      if (!logFile.exists()) {
+        sender.sendMessage(ChatColor.RED + "Logfile not found (" + showLog.getLogPath() + ")");
+        return;
+      }
 
-        try {
-          byte[] data;
-          if (args.length == 0) {
-            if (logFile.length() > MAX_FILE_LENGTH) {
-              sender.sendMessage(ChatColor.GRAY + "Log file is too big use " + ChatColor.GOLD + "/showlog <lines>");
-              return;
-            }
-            data = Files.readAllBytes(logFile.toPath());
-          } else if (args.length == 1) {
-            data = this.readBottomLines(logFile, Integer.parseInt(args[0]));
-          } else {
-            sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
+      if (!logFile.isFile()) {
+        sender.sendMessage(ChatColor.RED + "Logfile is not a file");
+        return;
+      }
+
+      try {
+        byte[] data;
+        if (args.length == 0) {
+          if (logFile.length() > MAX_FILE_LENGTH) {
+            sender.sendMessage(ChatColor.GRAY + "Log file is too big use " + ChatColor.GOLD + "/showlog <lines>");
             return;
           }
-
-          sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + LegendShowLog.pasteDomain
-              + this.postToHastebin(data));
-        } catch (NumberFormatException ex) {
+          data = Files.readAllBytes(logFile.toPath());
+        } else if (args.length == 1) {
+          data = this.readBottomLines(logFile, Integer.parseInt(args[0]));
+        } else {
           sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
-        } catch (Exception ex) {
-          sender.sendMessage(ChatColor.RED + "An error occurred while reading the log file (" + ex.getMessage() + ")");
+          return;
         }
-      });
 
-      return true;
-    }
-    return false;
+        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + showLog.getPasteDomain()
+            + this.postToHastebin(data));
+      } catch (NumberFormatException ex) {
+        sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
+      } catch (Exception ex) {
+        sender.sendMessage(ChatColor.RED + "An error occurred while reading the log file (" + ex.getMessage() + ")");
+      }
+    });
+
+    return true;
   }
 
   private byte[] readBottomLines(final File file, final int lines) throws IOException {
@@ -102,7 +108,7 @@ public class ShowLogCommand implements CommandExecutor {
   }
 
   private String postToHastebin(final byte[] data) throws IOException {
-    URL url = new URL(LegendShowLog.postUrl);
+    URL url = new URL(showLog.getPostUrl());
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
     urlConnection.setDoOutput(true);
     urlConnection.setRequestMethod("POST");
