@@ -9,6 +9,15 @@ This helps a lot with debugging.
 | --- | --- |
 | /showlog | showlog.paste |
 
+## Config options
+LegendShowLog's config provides options to use a custom paste server. LegendShowLog is designed and tested only for hastebin.
+
+| Option | Description |
+| --- | --- |
+| showlog.log_path | Path to latest log file |
+| showlog.post_url | Post endpoint of hastebin server |
+| showlog.paste_url | Root url of hastebin server |
+
 ## Maven Repository
 LegendShowLog is available through our Maven [repository](https://repository.playlegend.net).
 You have to replace **version** with your desired values. 
