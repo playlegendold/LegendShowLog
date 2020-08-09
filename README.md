@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.playlegend:legendshowlog:VERSION")
+    compileOnly("net.playlegend:legendshowlog-bukkit:VERSION")
 }
 ```
 
@@ -45,7 +45,7 @@ dependencies {
 
 <dependency>
     <groupId>net.playlegend</groupId>
-    <artifactId>legendshowlog</artifactId>
+    <artifactId>legendshowlog-bukkit</artifactId>
     <version>VERSION</version>
 </dependency>
 ```
