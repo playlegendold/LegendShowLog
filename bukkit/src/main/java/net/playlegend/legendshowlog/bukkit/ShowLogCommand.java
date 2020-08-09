@@ -2,6 +2,7 @@ package net.playlegend.legendshowlog.bukkit;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -23,19 +24,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
   private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+  private final String logPath;
+  private final String postUrl;
+  private final String pasteUrl;
 
   @Override
   public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
                            final @NotNull String label, final @NotNull String[] args) {
 
+    if (!sender.hasPermission("showlog.paste")) {
+      return false;
+    }
+
     EXECUTOR_SERVICE.submit(() -> {
-      File logFile = new File(LegendShowLog.LOG_PATH);
+      File logFile = new File(logPath);
       if (!logFile.exists()) {
-        sender.sendMessage(ChatColor.RED + "Logfile not found (" + LegendShowLog.LOG_PATH + ")");
+        sender.sendMessage(ChatColor.RED + "Logfile not found (" + logPath + ")");
         return;
       }
 
@@ -59,8 +68,8 @@ public class ShowLogCommand implements CommandExecutor {
           return;
         }
 
-        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + LegendShowLog.PASTE_DOMAIN
-                + this.postToHastebin(data));
+        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + pasteUrl
+            + this.postToHastebin(data));
       } catch (NumberFormatException ex) {
         sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
       } catch (Exception ex) {
@@ -99,7 +108,7 @@ public class ShowLogCommand implements CommandExecutor {
   }
 
   private String postToHastebin(final byte[] data) throws IOException {
-    URL url = new URL(LegendShowLog.POST_URL);
+    URL url = new URL(postUrl);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
     urlConnection.setDoOutput(true);
     urlConnection.setRequestMethod("POST");

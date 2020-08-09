@@ -1,0 +1,8 @@
+# LegendShowLog Configuration
+showlog:
+  # Path to log file
+  log_path: "logs/latest.log"
+  # Hastebin POST URL
+  post_url: "https://paste.playlegend.net/documents"
+  # Root URL of Hastebin Paste server
+  paste_url: "https://paste.playlegend.net/"
