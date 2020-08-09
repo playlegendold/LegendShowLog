@@ -27,10 +27,14 @@ public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
   private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
-  private final LegendShowLog showLog;
+  private final String logPath;
+  private final String postUrl;
+  private final String pasteUrl;
 
-  public ShowLogCommand(final LegendShowLog showLog) {
-    this.showLog = showLog;
+  public ShowLogCommand(final String logPath, final String postUrl, final String pasteUrl) {
+    this.logPath = logPath;
+    this.postUrl = postUrl;
+    this.pasteUrl = pasteUrl;
   }
 
   @Override
@@ -42,9 +46,9 @@ public class ShowLogCommand implements CommandExecutor {
     }
 
     EXECUTOR_SERVICE.submit(() -> {
-      File logFile = new File(showLog.getLogPath());
+      File logFile = new File(logPath);
       if (!logFile.exists()) {
-        sender.sendMessage(ChatColor.RED + "Logfile not found (" + showLog.getLogPath() + ")");
+        sender.sendMessage(ChatColor.RED + "Logfile not found (" + logPath + ")");
         return;
       }
 
@@ -68,7 +72,7 @@ public class ShowLogCommand implements CommandExecutor {
           return;
         }
 
-        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + showLog.getPasteDomain()
+        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + pasteUrl
             + this.postToHastebin(data));
       } catch (NumberFormatException ex) {
         sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
@@ -108,7 +112,7 @@ public class ShowLogCommand implements CommandExecutor {
   }
 
   private String postToHastebin(final byte[] data) throws IOException {
-    URL url = new URL(showLog.getPostUrl());
+    URL url = new URL(postUrl);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
     urlConnection.setDoOutput(true);
     urlConnection.setRequestMethod("POST");

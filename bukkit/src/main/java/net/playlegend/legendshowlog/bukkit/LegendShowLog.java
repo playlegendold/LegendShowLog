@@ -40,6 +40,6 @@ public class LegendShowLog extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    this.getCommand("showlog").setExecutor(new ShowLogCommand(this));
+    this.getCommand("showlog").setExecutor(new ShowLogCommand(logPath, postUrl, pasteDomain));
   }
 }
