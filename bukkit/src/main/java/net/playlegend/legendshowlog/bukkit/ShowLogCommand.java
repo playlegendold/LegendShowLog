@@ -2,6 +2,7 @@ package net.playlegend.legendshowlog.bukkit;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -23,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
@@ -31,17 +33,11 @@ public class ShowLogCommand implements CommandExecutor {
   private final String postUrl;
   private final String pasteUrl;
 
-  public ShowLogCommand(final String logPath, final String postUrl, final String pasteUrl) {
-    this.logPath = logPath;
-    this.postUrl = postUrl;
-    this.pasteUrl = pasteUrl;
-  }
-
   @Override
   public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
                            final @NotNull String label, final @NotNull String[] args) {
 
-    if (sender.hasPermission("showlog.paste")) {
+    if (!sender.hasPermission("showlog.paste")) {
       return false;
     }
 

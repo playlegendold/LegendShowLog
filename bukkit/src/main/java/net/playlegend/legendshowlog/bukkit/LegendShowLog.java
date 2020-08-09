@@ -1,6 +1,5 @@
 package net.playlegend.legendshowlog.bukkit;
 
-import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,11 +10,8 @@ import java.util.logging.Level;
 
 public class LegendShowLog extends JavaPlugin {
 
-  @Getter
   private String logPath;
-  @Getter
   private String postUrl;
-  @Getter
   private String pasteDomain;
 
   @Override

@@ -7,12 +7,6 @@ version = if (System.getenv("CI") != null) {
     "dev"
 }.replace("/", "-")
 
-val branchVersion = when (branch?.toLowerCase()) {
-    "prod" -> "prod"
-    "stage" -> "stage"
-    else -> "dev"
-}
-
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
     compileOnly("commons-io:commons-io:2.5")
