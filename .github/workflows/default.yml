@@ -7,6 +7,8 @@ on:
       - dev
       - feature/*
       - bugfix/*
+    tags:
+      - 'v*.*.*'
 jobs:
   build:
     runs-on: self-hosted
