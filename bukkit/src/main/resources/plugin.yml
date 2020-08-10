@@ -10,4 +10,4 @@ authors:
 
 commands:
   showlog:
-    permission: legend.command.showlog
+    permission: showlog.paste

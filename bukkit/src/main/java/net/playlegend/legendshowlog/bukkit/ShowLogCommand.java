@@ -29,6 +29,7 @@ public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
   private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+  private static final Gson GSON = new Gson();
   private final String logPath;
   private final String postUrl;
   private final String pasteUrl;
@@ -36,15 +37,10 @@ public class ShowLogCommand implements CommandExecutor {
   @Override
   public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
                            final @NotNull String label, final @NotNull String[] args) {
-
-    if (!sender.hasPermission("showlog.paste")) {
-      return false;
-    }
-
     EXECUTOR_SERVICE.submit(() -> {
-      File logFile = new File(logPath);
+      File logFile = new File(this.logPath);
       if (!logFile.exists()) {
-        sender.sendMessage(ChatColor.RED + "Logfile not found (" + logPath + ")");
+        sender.sendMessage(ChatColor.RED + "Logfile not found (" + this.logPath + ")");
         return;
       }
 
@@ -68,7 +64,7 @@ public class ShowLogCommand implements CommandExecutor {
           return;
         }
 
-        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + pasteUrl
+        sender.sendMessage(ChatColor.GRAY + "Log: " + ChatColor.GOLD + this.pasteUrl
             + this.postToHastebin(data));
       } catch (NumberFormatException ex) {
         sender.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.GOLD + "/showlog <lines>");
@@ -108,15 +104,14 @@ public class ShowLogCommand implements CommandExecutor {
   }
 
   private String postToHastebin(final byte[] data) throws IOException {
-    URL url = new URL(postUrl);
+    URL url = new URL(this.postUrl);
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
     urlConnection.setDoOutput(true);
     urlConnection.setRequestMethod("POST");
 
-    OutputStream outputStream = urlConnection.getOutputStream();
-    outputStream.write(data);
-    outputStream.flush();
-    outputStream.close();
+    try (OutputStream outputStream = urlConnection.getOutputStream()) {
+      outputStream.write(data);
+    }
 
     urlConnection.connect();
 
@@ -128,7 +123,7 @@ public class ShowLogCommand implements CommandExecutor {
          BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
       String result = bufferedReader.lines().collect(Collectors.joining("\n"));
 
-      JsonObject response = new Gson().fromJson(result, JsonObject.class);
+      JsonObject response = GSON.fromJson(result, JsonObject.class);
 
       return response.get("key").getAsString();
     }
