@@ -28,8 +28,9 @@ import java.util.stream.Collectors;
 public class ShowLogCommand implements CommandExecutor {
 
   private static final long MAX_FILE_LENGTH = 5 * 1024 * 1024L;
-  private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
-  private static final Gson GSON = new Gson();
+  private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+  private static final Gson gson = new Gson();
+  
   private final String logPath;
   private final String postUrl;
   private final String pasteUrl;
@@ -37,7 +38,7 @@ public class ShowLogCommand implements CommandExecutor {
   @Override
   public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command,
                            final @NotNull String label, final @NotNull String[] args) {
-    EXECUTOR_SERVICE.submit(() -> {
+    executorService.submit(() -> {
       File logFile = new File(this.logPath);
       if (!logFile.exists()) {
         sender.sendMessage(ChatColor.RED + "Logfile not found (" + this.logPath + ")");
@@ -123,7 +124,7 @@ public class ShowLogCommand implements CommandExecutor {
          BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
       String result = bufferedReader.lines().collect(Collectors.joining("\n"));
 
-      JsonObject response = GSON.fromJson(result, JsonObject.class);
+      JsonObject response = gson.fromJson(result, JsonObject.class);
 
       return response.get("key").getAsString();
     }
