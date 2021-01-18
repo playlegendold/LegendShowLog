@@ -15,7 +15,7 @@ version = if (System.getenv("CI") != null) {
 }.replace("/", "-")
 
 dependencies {
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT")
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("commons-io:commons-io:2.8.0")
     compileOnly("org.jetbrains:annotations:20.1.0")
 }
