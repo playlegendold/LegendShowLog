@@ -1,4 +1,4 @@
-<a href="https://playlegend.net"><img src="https://static.playlegend.net/full-logo-stone-highres.png" width="60%"></a>
+<a href="https://playlegend.net"><img src="assets/full-logo-stone-highres.png" width="60%"></a>
 
 # LegendShowLog
 LegendShowLog provides a command to quickly paste current logs onto a paste server. 
