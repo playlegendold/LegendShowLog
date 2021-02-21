@@ -16,8 +16,8 @@ Fixes # (issue)
 
 # Checklist
 
-- [ ] My code follows the style guidelines of this Minecraft Legend
+- [ ] My code follows the style guidelines of Minecraft Legend
 - [ ] I have performed a self-review of my own code
-- [ ] I have tested my feature or bugfix on my development server
+- [ ] I have tested my feature or bugfix
 - [ ] My changes generate no new warnings
 - [ ] Any dependent changes have been merged and published in downstream modules
