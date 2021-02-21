@@ -63,7 +63,7 @@ jobs:
           repositoryUser: ${{ secrets.repositoryUser }}
           repositoryPassword: ${{ secrets.repositoryPassword }}
       - name: Export Spotbugs results
-        uses: jwgmeligmeyling/spotbugs-github-action@efe5b40
+        uses: jwgmeligmeyling/spotbugs-github-action@efe5b4060e8db59d224fd863411375c994e46a69
         with:
           path: '**/reports/spotbugs/main.xml'
         env:
