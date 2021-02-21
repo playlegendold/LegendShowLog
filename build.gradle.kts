@@ -1,21 +1,13 @@
-val branch: String? = System.getenv("GITHUB_REF")
-        ?.replace("refs/heads/", "")
-        ?.replace("refs/tags/", "")
-
 group = "net.playlegend"
-version = if (System.getenv("CI") != null) {
-    branch.toString()
-} else {
-    "dev"
-}.replace("/", "-")
+version = "1.0.0"
 
 plugins {
     `java-library`
     `maven-publish`
     checkstyle
-    id("com.github.johnrengelman.shadow") version "5.1.0"
-    id("org.sonarqube") version "2.7"
-    id("com.gorylenko.gradle-git-properties") version "2.2.2"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.gorylenko.gradle-git-properties") version "2.2.4"
+    id("com.github.spotbugs") version "4.6.1"
 }
 
 tasks.create<Copy>("copyHooks") {
@@ -26,15 +18,21 @@ tasks.create<Copy>("copyHooks") {
 tasks.getByPath("prepareKotlinBuildScriptModel").dependsOn("copyHooks")
 
 subprojects {
-    apply(plugin = "java-library")
+    apply(plugin = "java")
     apply(plugin = "maven-publish")
     apply(plugin = "checkstyle")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "com.gorylenko.gradle-git-properties")
+    apply(plugin = "com.github.spotbugs")
 
     checkstyle {
-        toolVersion = "8.34"
-        config = project.resources.text.fromUri("https://static.playlegend.net/checkstyle.xml")
+        toolVersion = "8.40"
+        config = project.resources.text.fromUri("https://assets.playlegend.net/checkstyle.xml")
+    }
+
+    spotbugs {
+        ignoreFailures.set(true)
+        showProgress.set(true)
     }
 
     gitProperties {
@@ -47,8 +45,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://papermc.io/repo/repository/maven-public/")
         maven {
             url = uri("https://repository.playlegend.net/artifactory/legend/")
@@ -65,13 +61,13 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("org.projectlombok:lombok:1.18.12")
-        annotationProcessor("org.projectlombok:lombok:1.18.12")
+        compileOnly("org.projectlombok:lombok:1.18.18")
+        annotationProcessor("org.projectlombok:lombok:1.18.18")
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_14
-        targetCompatibility = JavaVersion.VERSION_14
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     tasks.withType<JavaCompile> { options.encoding = "UTF-8" }

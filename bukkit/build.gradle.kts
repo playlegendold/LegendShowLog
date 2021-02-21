@@ -4,15 +4,20 @@ val branch: String? = System.getenv("GITHUB_REF")
 
 group = "net.playlegend"
 version = if (System.getenv("CI") != null) {
-    branch.toString()
+    if (branch.equals("stage") || branch.equals("prod")
+            || branch!!.matches(Regex("v\\d+[.]\\d+[.]\\d+"))) {
+        branch.toString()
+    } else {
+        "$branch-SNAPSHOT"
+    }
 } else {
-    "dev"
+    "dev-SNAPSHOT"
 }.replace("/", "-")
 
 dependencies {
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
-    compileOnly("commons-io:commons-io:2.5")
-    compileOnly("org.jetbrains:annotations:19.0.0")
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("commons-io:commons-io:2.8.0")
+    compileOnly("org.jetbrains:annotations:20.1.0")
 }
 
 val tokens = mapOf("VERSION" to project.version)
@@ -35,7 +40,7 @@ publishing {
             artifactId = project.name.toLowerCase()
             version = project.version.toString()
 
-            from(components["java"])
+            artifact(tasks["jar"])
             artifact(tasks["shadowJar"])
             artifact(tasks["fatSources"])
         }
