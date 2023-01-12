@@ -17,7 +17,7 @@ version = if (System.getenv("CI") != null) {
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("commons-io:commons-io:2.8.0")
-    compileOnly("org.jetbrains:annotations:20.1.0")
+    compileOnly("org.jetbrains:annotations:24.0.0")
 }
 
 val tokens = mapOf("VERSION" to project.version)
